@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+{% block title %}View Team{% endblock %}
+
+{% block extra_styles %}
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon { font-size: 4rem; display: block; margin-bottom: 1rem; opacity: 0.4; }
+.empty-state h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 4px; color: var(--text-muted); margin-bottom: 0.5rem; }
+.empty-state p  { font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 1.5rem; }
+
+/* ── CARDS GRID ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+/* ── FIFA CARD ── */
+.fut-card {
+  width: 200px;
+  height: 280px;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: default;
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin: 0 auto;
+}
+
+.fut-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(201,168,76,0.2);
+}
+
+.fut-card-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #b8960c 0%, #f0d060 30%, #c9a030 55%, #7a5a00 100%);
+}
+
+.fut-card-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 20%, rgba(255,255,255,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(0,0,0,0.2) 0%, transparent 70%);
+}
+
+.fut-card-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 12px;
+}
+
+/* top row: rating + position */
+.fut-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.fut-rating {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  color: #1a0e00;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.fut-position {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  color: #2a1500;
+  letter-spacing: 2px;
+  margin-top: -2px;
+}
+
+/* silhouette area */
+.fut-player-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.fut-silhouette {
+  font-size: 5rem;
+  opacity: 0.85;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  user-select: none;
+}
+
+/* jersey number badge */
+.fut-jersey-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  color: #fff;
+}
+
+/* bottom info strip */
+.fut-bottom {
+  background: rgba(0,0,0,0.4);
+  border-radius: 6px;
+  padding: 6px 8px;
+  backdrop-filter: blur(4px);
+}
+
+.fut-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+
+.fut-club {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-top: 1px;
+}
+
+/* ── SIGNATURE STRIP ── */
+.fut-signature-strip {
+  margin-top: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold-dark);
+  border-radius: 0 4px 4px 0;
+  padding: 0.8rem 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--gold-light);
+  word-break: break-all;
+  min-height: 50px;
+}
+
+.sig-label {
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+/* ── CARD WRAPPER ── */
+.card-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── DELETE FORM ── */
+.delete-form {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.delete-form button {
+  width: 100%;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  padding: 0.4rem;
+}
+
+/* ── SQUAD HEADER ── */
+.squad-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.squad-header h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+}
+
+.squad-header h2 span { color: var(--gold); }
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>View Team</h1>
+  <div class="divider"></div>
+  <p>Your assembled squad</p>
+</div>
+
+{% if players %}
+  <div class="squad-header">
+    <h2>Squad — <span>{{ players|length }} Player{{ 's' if players|length != 1 else '' }}</span></h2>
+    <a href="/create" class="btn btn-outline">+ Add Player</a>
+  </div>
+
+  <div class="cards-grid">
+    {% for p in players %}
+    <div class="card-wrap">
+
+      <!-- FIFA Card -->
+      <div class="fut-card">
+        <div class="fut-card-bg"></div>
+        <div class="fut-card-inner">
+          <div class="fut-top">
+            <div class="fut-rating">{{ range(75, 99) | random }}</div>
+            <div class="fut-position">ST</div>
+          </div>
+          <div class="fut-player-area">
+            <span class="fut-silhouette"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+          </div>
+          <div class="fut-jersey-badge">{{ p.jersey_number }}</div>
+          <div class="fut-bottom">
+            <div class="fut-name">{{ p.name }}</div>
+            <div class="fut-club">{{ p.club }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signature strip — RENDERED UNSAFELY (vulnerable sink) -->
+      <div class="fut-signature-strip">
+        <div class="sig-label">Jersey Signature</div>
+        {{ p.signature | safe }}
+      </div>
+
+      <div class="delete-form">
+        <form method="POST" action="/delete/{{ p.id }}">
+          <button type="submit" class="btn btn-danger"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Remove from Squad</button>
+        </form>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+{% else %}
+  <div class="empty-state">
+    <span class="empty-icon" style="display: flex; justify-content: center;"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1 .78-1.63l14 2a1 1 0 0 1 .84 1.22l-2 7a1 1 0 0 1-.9.76H7.13a1 1 0 0 1-.89-.78z"></path><path d="M12 14v4"></path><path d="M8 14v4"></path><path d="M16 14v4"></path><path d="M3.78 11.58A1 1 0 0 1 4.56 10l13.6-2a1 1 0 0 1 1.25.86l.66 4.7a1 1 0 0 1-.9.75"></path><path d="M3.07 9.17A1 1 0 0 1 3.8 7.5L17.2 5.2a1 1 0 0 1 1.28.87l.45 3.33a1 1 0 0 1-.9.75"></path></svg></span>
+    <h2>No Team Available</h2>
+    <p>Your squad is empty. Head to Create Team to add players.</p>
+    <a href="/create" class="btn btn-gold">Build Your Squad <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-left: 4px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+  </div>
+{% endif %}
+
+{% endblock %}

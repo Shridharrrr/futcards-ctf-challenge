@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Create Team{% endblock %}
+
+{% block extra_styles %}
+.form-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2.5rem;
+}
+
+.form-row {
+  margin-bottom: 1.5rem;
+}
+
+.form-row label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.form-row input, .form-row textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  padding: 0.7rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-row input:focus, .form-row textarea:focus { border-color: var(--gold-dark); }
+
+.form-row textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.9rem;
+}
+
+.field-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+  letter-spacing: 0.5px;
+}
+.field-hint.warn { color: #c09040; }
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.rating-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.signature-wrap { position: relative; }
+
+.signature-label-badge {
+  position: absolute;
+  top: -10px;
+  right: 0;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  color: #0a0a0f;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Create Team</h1>
+</div>
+
+<div class="form-wrap">
+
+  {% if error %}
+    <div class="alert alert-error">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> {{ error }}
+    </div>
+  {% endif %}
+
+  {% if success %}
+    <div class="alert alert-success">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><polyline points="20 6 9 17 4 12"></polyline></svg> {{ success }}
+    </div>
+  {% endif %}
+
+  <div class="form-card">
+    <form method="POST" action="/create">
+      
+      <div class="form-row">
+        <label>Player Name</label>
+        <input type="text" name="name" placeholder="e.g. Lionel Messi" maxlength="40" required>
+      </div>
+
+      <div class="rating-row">
+        <div class="form-row">
+          <label>Club</label>
+          <input type="text" name="club" placeholder="e.g. Inter Miami" maxlength="30" required>
+        </div>
+        <div class="form-row">
+          <label>Jersey Number</label>
+          <input type="number" name="jersey_number" placeholder="1 – 99" min="1" max="99" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Jersey Signature</label>
+        <div class="signature-wrap">
+          <span class="signature-label-badge">Special Edition</span>
+          <textarea name="jersey_signature" placeholder="Your signature text for the jersey..." maxlength="300" required></textarea>
+        </div>
+        <!-- Hint: Jinja expressions are helpful! -->
+      </div>
+
+      <div class="form-footer">
+        <a href="/dashboard" class="btn btn-outline"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</a>
+        <button type="submit" class="btn btn-gold">Add to Squad <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-left: 4px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}
